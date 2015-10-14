@@ -1,0 +1,37 @@
+<head>
+  <title>Grow</title>
+</head>
+
+<body>
+	{{> loginButtons}}
+	{{> hello}}
+	{{> controls}}
+</body>
+
+<template name="hello">
+	<table class="leaderboard table table-striped">
+	<thead>
+		<th>Macro</th><th>Size</th><th>Growth Rate</th>
+	</thead>
+	{{#each players}}
+		{{> player}}
+	{{/each}}
+	</table>
+	
+	<p>{{user.username}} is {{user.size}} feet tall and grows {{user.rate}} feet taller each tick.</p>
+</template>
+
+<template name="controls">
+	<input type="button" class="grow btn span4" value="Grow" />
+	{{#each upgrades}}
+		<input type="button" class="buy btn span4" id="{{name}}" value="{{name}} ({{cost}})" />
+	{{/each}}
+</template>
+
+<template name="player">
+	<tr class="player">
+		<td class="name">{{username}}</td>
+		<td class="size">{{size}} ft</td>
+		<td class="rate">{{rate}}</td>
+	</tr>
+</template>
