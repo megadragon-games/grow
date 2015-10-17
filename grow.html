@@ -1,37 +1,66 @@
+
 <head>
   <title>Grow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-	{{> loginButtons}}
+  <div class="container">
 	{{> hello}}
 	{{> controls}}
+	{{> settings}}
+  </div>
 </body>
 
 <template name="hello">
-	<table class="leaderboard table table-striped">
+	<table class="leaderboard table table-border table-striped table-hover">
 	<thead>
 		<th>Macro</th><th>Size</th><th>Growth Rate</th>
 	</thead>
+  <tbody>
 	{{#each players}}
 		{{> player}}
 	{{/each}}
+  </tbody>
 	</table>
-	
-	<p>{{user.username}} is {{user.size}} feet tall and grows {{user.rate}} feet taller each tick.</p>
+
+	{{#if currentUser}}
+		<h1>{{user.username}}</h1>
+		<h3>{{user.adjective}} {{user.species}}</h3>
+		<p>{{user.size}} feet tall, growing {{user.rate}} feet taller each tick</p>
+	{{else}}
+		<h1>Sign in to play!</h1>
+	{{/if}}
+
+	{{> loginButtons}}
 </template>
 
 <template name="controls">
-	<input type="button" class="grow btn span4" value="Grow" />
+	<input type="button" class="grow btn col-md-4" value="Grow" />
 	{{#each upgrades}}
-		<input type="button" class="buy btn span4" id="{{name}}" value="{{name}} ({{cost}})" />
+		<input type="button" class="buy btn col-md-4" id="{{name}}" value="{{name}} ({{cost}})" />
 	{{/each}}
 </template>
 
 <template name="player">
 	<tr class="player">
-		<td class="name">{{username}}</td>
-		<td class="size">{{size}} ft</td>
+		<td class="name">{{username}}, {{adjective}} {{species}}</td>
+		<td class="size">{{format size}} ft</td>
 		<td class="rate">{{rate}}</td>
 	</tr>
+</template>
+
+<template name="settings">
+
+	<div class="input-group">
+		<span class="input-group-addon">Species</span>
+		<input type="text" class="form-control species-editor" placeholder="Your character's species">
+		<span class="input-group-btn">
+			<button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
+		</span>
+	</div>
+
+	<form class="adjective-editor">
+		<input type="text" name="text" placeholder="Your character's adjective" />
+	</form>
 </template>
