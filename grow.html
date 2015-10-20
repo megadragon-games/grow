@@ -5,40 +5,64 @@
 </head>
 
 <body>
+  {{> navigation}}
   <div class="container">
 	{{> hello}}
-	{{> controls}}
-	{{> settings}}
+	<!--{{> controls}}-->
+  <br/>
+
+  <div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#upgrades" aria-controls="upgrades" role="tab" data-toggle="tab">
+        <span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Upgrades</a></li>
+      <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">
+        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a></li>
+      <li role="presentation"><a href="#leaderboard" aria-controls="leaderboard" role="tab" data-toggle="tab">
+        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Leaderboard</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="upgrades">
+        {{> upgradeList}}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="settings">
+        {{> settings}}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="leaderboard">
+        {{> leaderboard}}
+      </div>
+    </div>
+
+  </div>
+
   </div>
 </body>
 
 <template name="hello">
-	<table class="leaderboard table table-border table-striped table-hover">
-	<thead>
-		<th>Macro</th><th>Size</th><th>Growth Rate</th>
-	</thead>
-  <tbody>
-	{{#each players}}
-		{{> player}}
-	{{/each}}
-  </tbody>
-	</table>
-
 	{{#if currentUser}}
-		<h1>{{user.username}}</h1>
-		<h3>{{user.adjective}} {{user.species}}</h3>
-		<p>{{user.size}} feet tall, growing {{user.rate}} feet taller each tick</p>
+  <div class="page-header">
+    <h1>{{user.username}} <small>the {{user.adjective}} {{user.species}}</small></h1>
+  </div>
+  <p>{{format user.size}} feet tall, growing {{user.rate}} feet taller each tick</p>
+	<!--<h1>{{user.username}}</h1>
+	<h3>{{user.adjective}} {{user.species}}</h3>
+	<p>{{format user.size}} feet tall, growing {{user.rate}} feet taller each tick</p>-->
+  <button class="grow btn btn-danger col-md-4"><span class="glyphicon glyphicon-upload"></span> Grow</button>
 	{{else}}
-		<h1>Sign in to play!</h1>
+		{{> attract}}
 	{{/if}}
-
-	{{> loginButtons}}
 </template>
 
 <template name="controls">
-	<input type="button" class="grow btn col-md-4" value="Grow" />
+	<!--<input type="button" class="grow btn btn-danger col-md-4"><span class="glyphicon glyphicon-upload"></span> Grow</input>-->
+</template>
+
+<template name="upgradeList">
 	{{#each upgrades}}
-		<input type="button" class="buy btn col-md-4" id="{{name}}" value="{{name}} ({{cost}})" />
+		<input type="button" class="buy btn btn-primary col-md-4" id="{{name}}" value="{{name}} ({{cost}})" />
 	{{/each}}
 </template>
 
@@ -51,16 +75,60 @@
 </template>
 
 <template name="settings">
+  <form class="species-editor">
+    <div class="input-group">
+      <span class="input-group-addon" data-toggle="tooltip" title="Enter your character's species here.">Species</span>
+      <input id="speciesField" type="text" name="text" class="form-control" placeholder="Your character's species">
+      <span class="input-group-btn">
+        <button id="speciesRandomizer" class="btn btn-primary" type="button" data-toggle="tooltip" title="Randomize"><span class="glyphicon glyphicon-random" aria-hidden="true"></span></button>
+        <button class="btn btn-primary" type="submit" data-toggle="tooltip" title="Save"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
+  		</span>
+    </div>
+  </form>
 
-	<div class="input-group">
-		<span class="input-group-addon">Species</span>
-		<input type="text" class="form-control species-editor" placeholder="Your character's species">
-		<span class="input-group-btn">
-			<button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
-		</span>
-	</div>
+  <form class="adjective-editor">
+    <div class="input-group">
+      <span class="input-group-addon" data-toggle="tooltip" title="Enter an adjective here to customize your character.">Adjective</span>
+      <input id="adjectiveField" type="text" name="text" class="form-control" placeholder="Your character's adjective">
+      <span class="input-group-btn">
+  			<button id="adjectiveRandomizer" class="btn btn-primary" type="button" data-toggle="tooltip" title="Randomize"><span class="glyphicon glyphicon-random" aria-hidden="true"></span></button>
+        <button class="btn btn-primary" type="submit" data-toggle="tooltip" title="Save"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
+  		</span>
+    </div>
+  </form>
+</template>
 
-	<form class="adjective-editor">
-		<input type="text" name="text" placeholder="Your character's adjective" />
-	</form>
+<template name="navigation">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <span class="navbar-brand">GROW</span>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text">{{> loginButtons align="right"}}</li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+</template>
+
+<template name="leaderboard">
+  <table class="leaderboard table table-border table-striped table-hover">
+	<thead>
+		<th>Macro</th><th>Size</th><th>Growth Rate</th>
+	</thead>
+  <tbody>
+	{{#each players}}
+		{{> player}}
+	{{/each}}
+  </tbody>
+  </table>
+</template>
+
+<template name="attract">
+  <div class="jumbotron">
+    <h1>Welcome to GROW!</h1>
+    <p>Grow is a multiplayer incremental game made in Meteor. Sign in to play!</p>
+  </div>
 </template>

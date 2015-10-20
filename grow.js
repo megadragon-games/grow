@@ -9,15 +9,13 @@ if (Meteor.isClient) {
 	  return Meteor.user();
   }
 
-  Template.hello.players = function(){
+  Template.leaderboard.players = function(){
 	  return Meteor.users.find({}, {sort: {"size": -1}});
   }
 
-  Template.controls.upgrades = function(){
+  Template.upgradeList.upgrades = function(){
 	  return [{name: "Chant", cost: 20, income: 1}];
   }
-
-  //console.log(Template.controls.upgrades());
 
   Template.controls.events({
 	  "click input.grow": function(){
@@ -34,6 +32,16 @@ if (Meteor.isClient) {
   });
 
   Template.settings.events({
+		"click #speciesRandomizer": function(){
+			var possibilities = ["dragon","kangaroo"];
+			var watchword = Math.floor(Math.random() * possibilities.length);
+			$("#speciesField").val(possibilities[watchword]);
+		},
+		"click #adjectiveRandomizer": function(){
+			var possibilities = ["big","fat"];
+			var watchword = Math.floor(Math.random() * possibilities.length);
+			$("#adjectiveField").val(possibilities[watchword]);
+		},
 	  "submit .species-editor": function(event){
 		  event.preventDefault();
 		  Meteor.call("modifyField", "species", event.target.text.value);
@@ -49,6 +57,11 @@ if (Meteor.isClient) {
 	Handlebars.registerHelper('format', function(number){
     return number.toLocaleString();
   });
+
+	// Initalize Bootstrap tooltips
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+	});
 }
 
 if (Meteor.isServer) {
@@ -101,4 +114,9 @@ Meteor.methods({
 		setModifier.$set[attribute] = value;
 		Meteor.users.update({_id: this.userId}, setModifier);
 	},
+
+	pickFromArray: function(array){
+		var watchword = Math.floor(Math.random() * array.length);
+		return array[watchword];
+	}
 });
